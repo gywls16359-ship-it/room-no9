@@ -20,11 +20,28 @@ npm run dev
 
 - `./src/styles/main.css`
 - `./public/reservation.js`
-- `./public/image/` 안의 이미지
+- `/image/` 안의 이미지
 
 그래도 예약·모달이 안 되면 **`npm run dev`** 를 사용하세요.
 
-## 배포
+## Supabase 예약 연동
+
+1. [Supabase](https://supabase.com) 프로젝트를 생성합니다.
+2. **SQL Editor**에서 `supabase/migrations/001_reservations.sql` 전체를 실행합니다.
+3. 프로젝트 루트에 `.env` 파일을 만들고 `.env.example`을 참고해 값을 채웁니다.
+
+| 변수 | 설명 |
+|------|------|
+| `VITE_SUPABASE_URL` | `https://xxxx.supabase.co` |
+| `VITE_SUPABASE_ANON_KEY` | Supabase **anon** 공개 키 |
+
+4. `npm run dev`로 서버를 **재시작**한 뒤 예약 폼을 테스트합니다.
+
+저장 컬럼: `name`, `contact`, `date`, `time`, `people`, `memo`, `order_categories`(배열), `order_items`(배열)
+
+## 배포 (Vercel)
+
+**Settings → Environment Variables**에 `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`를 추가한 뒤 Redeploy 합니다.
 
 ```bash
 npm run build
@@ -40,7 +57,7 @@ npm run build
 | Mood | Full-width | 스피크이지 무드 문구 |
 | Service Flow | Full-width 3-cut | 키워드 → 제조 → 완성 |
 | Info | 1300px grid | 핵심 가치 제안 |
-| Reservation | 1300px grid | 예약 폼 + 완료 모달 (데모) |
+| Reservation | 1300px grid | Supabase 예약 저장 |
 
 ## 디자인
 

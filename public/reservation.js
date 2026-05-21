@@ -1,8 +1,25 @@
 /**
- * 예약 폼 + 간편 주문 + 완료 모달 (모듈 없이 동작, 서버 전송 없음)
+ * 예약 폼 + 간편 주문 + Supabase 저장 + 완료 모달
  */
 (function () {
+  var SUPABASE_URL = '';
+  var SUPABASE_ANON_KEY = '';
+
+  function readSupabaseConfig() {
+    var el = document.getElementById('supabase-config');
+    if (!el) return;
+    try {
+      var data = JSON.parse(el.textContent || '{}');
+      SUPABASE_URL = (data.url || '').trim();
+      SUPABASE_ANON_KEY = (data.anonKey || '').trim();
+    } catch (err) {
+      console.error('Supabase config parse error', err);
+    }
+  }
+
   function init() {
+    readSupabaseConfig();
+
     var form = document.getElementById('reservation-form');
     var statusEl = document.getElementById('form-status');
     var modal = document.getElementById('reservation-success-modal');
@@ -25,10 +42,22 @@
         statusEl.className = 'form-status';
       }
 
+      if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+        if (statusEl) {
+          statusEl.textContent =
+            'Supabase 설정이 없습니다. .env 또는 Vercel 환경 변수를 확인해 주세요.';
+          statusEl.classList.add('is-error');
+        }
+        return;
+      }
+
       var name = (form.querySelector('#name')?.value || '').trim();
       var contact = (form.querySelector('#contact')?.value || '').trim();
       var date = form.querySelector('#date')?.value || '';
       var time = form.querySelector('#time')?.value || '';
+      var people = parseInt(form.querySelector('#people')?.value || '1', 10);
+      var memo = (form.querySelector('#message')?.value || '').trim() || null;
+      var orderData = collectOrderData(form);
 
       if (!name || !contact || !date || !time) {
         if (statusEl) {
@@ -38,7 +67,46 @@
         return;
       }
 
-      openSuccessModal(modal);
+      var submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
+
+      fetch(SUPABASE_URL + '/rest/v1/reservations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: 'Bearer ' + SUPABASE_ANON_KEY,
+          Prefer: 'return=minimal',
+        },
+        body: JSON.stringify({
+          name: name,
+          contact: contact,
+          date: date,
+          time: time,
+          people: isNaN(people) ? 1 : people,
+          memo: memo,
+          order_categories: orderData.order_categories,
+          order_items: orderData.order_items,
+        }),
+      })
+        .then(function (res) {
+          if (!res.ok) {
+            return res.text().then(function (t) {
+              throw new Error(t || 'HTTP ' + res.status);
+            });
+          }
+          if (submitBtn) submitBtn.disabled = false;
+          openSuccessModal(modal);
+        })
+        .catch(function (err) {
+          console.error(err);
+          if (submitBtn) submitBtn.disabled = false;
+          if (statusEl) {
+            statusEl.textContent =
+              '예약 전송에 실패했습니다. 잠시 후 다시 시도해 주세요.';
+            statusEl.classList.add('is-error');
+          }
+        });
     });
   }
 
@@ -126,18 +194,21 @@
   }
 
   function collectOrderData(form) {
-    var cat = form.querySelector('input[name="order_category"]:checked');
+    var categories = [];
+    form.querySelectorAll('input[name="order_category"]:checked').forEach(function (i) {
+      categories.push(i.value);
+    });
     var items = [];
     form.querySelectorAll('input[name="order_items"]:checked').forEach(function (i) {
       items.push(i.value);
     });
     return {
-      order_category: cat ? cat.value : null,
-      order_items: items.length ? items : null,
+      order_categories: categories.length ? categories : [],
+      order_items: items.length ? items : [],
     };
   }
 
-  var modalState = { scrollY: 0, closeTimer: null };
+  var modalState = { scrollY: 0 };
 
   function openSuccessModal(modal) {
     if (!modal) return;
