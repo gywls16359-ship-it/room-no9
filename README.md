@@ -2,14 +2,27 @@
 
 뉴욕 스피크이지 무드의 맞춤 칵테일 바 랜딩 페이지입니다. PRD/TRD 기준으로 Vite + Vanilla HTML/CSS/JS로 구성했습니다.
 
-## 실행
+## 실행 (필수)
+
+이 프로젝트는 **Vite** 로 실행해야 합니다. `index.html`을 Live Server로 직접 열면 동작하지 않습니다.
 
 ```bash
 npm install
 npm run dev
 ```
 
-브라우저에서 `http://localhost:5173` 을 엽니다.
+브라우저가 자동으로 `http://localhost:5173` 을 엽니다.  
+포트가 다르면 터미널에 표시된 주소를 사용하세요.
+
+### Live Server를 쓰고 싶다면
+
+프로젝트 **루트 폴더**에서 `index.html`을 연 뒤, 아래가 모두 로드되는지 확인하세요.
+
+- `./src/styles/main.css`
+- `./public/reservation.js`
+- `./public/image/` 안의 이미지
+
+그래도 예약·모달이 안 되면 **`npm run dev`** 를 사용하세요.
 
 ## Supabase 예약 연동
 

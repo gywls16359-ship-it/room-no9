@@ -1361,7 +1361,7 @@ html.js-scroll-anim .motion-slide.is-visible {
   transform: translateY(0);
 }
 
-html.js-scroll-anim .reveal:not(.motion-fade):not(.motion-slide):not(.is-visible) {
+html.has-js.js-scroll-anim .reveal:not(.motion-fade):not(.motion-slide):not(.is-visible) {
   opacity: 0;
   transform: translateY(20px);
   transition:

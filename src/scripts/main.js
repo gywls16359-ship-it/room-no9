@@ -4,6 +4,8 @@ const prefersReducedMotion = window.matchMedia(
 
 function initHeader() {
   const header = document.querySelector('.site-header');
+  if (!header) return;
+
   const onScroll = () => {
     header.classList.toggle('is-scrolled', window.scrollY > 40);
   };
@@ -88,7 +90,20 @@ function initYear() {
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
 }
 
+function primeVisibleReveals() {
+  const targets = document.querySelectorAll(
+    '.reveal, .flow-cut, .mood, .dim-reveal:not(#hero .dim-reveal), .brand-card, .menu-card'
+  );
+  targets.forEach((el) => {
+    if (isInViewport(el)) {
+      el.classList.add('is-visible');
+      el.querySelectorAll('.dim-reveal').forEach((d) => d.classList.add('is-visible'));
+    }
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  primeVisibleReveals();
   document.documentElement.classList.add('js-scroll-anim');
   initHeader();
   initReveal();

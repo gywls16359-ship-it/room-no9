@@ -18,7 +18,10 @@
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/src/styles/main.css" />
+    <link rel="stylesheet" href="./src/styles/main.css" />
+    <script>
+      document.documentElement.classList.add('has-js');
+    </script>
   </head>
   <body>
     <div
@@ -57,7 +60,7 @@
       <div class="header-inner">
         <a href="#hero" class="site-logo" aria-label="첫 화면으로 이동">
           <img
-            src="/image/winebar-logo.png"
+            src="./public/image/winebar-logo.png"
             alt="Room No.9 Cocktail & Wine Bar"
           />
         </a>
@@ -74,13 +77,13 @@
     <main>
       <!-- Hero: full-width -->
       <section
-        class="section section--full hero hero--invite-pending"
+        class="section section--full hero hero--invite-done hero--lights-ready"
         id="hero"
         aria-label="메인"
       >
         <div class="hero__bg parallax-layer" data-parallax="0.35" aria-hidden="true">
           <img
-            src="/image/main1.png"
+            src="./public/image/main1.png"
             alt=""
             width="1920"
             height="1080"
@@ -124,6 +127,10 @@
           if (!hero) return;
 
           var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if (!reduced) {
+            hero.classList.remove('hero--invite-done', 'hero--lights-ready');
+            hero.classList.add('hero--invite-pending');
+          }
           var content = hero.querySelector('.hero__content');
           var bg = hero.querySelector('.hero__bg');
           var typewriterEl = hero.querySelector('.hero__typewriter');
@@ -250,7 +257,7 @@
                 </p>
               </div>
               <div class="brand-card__media">
-                <img src="/image/brand1.jpg" alt="Calm Elegance" loading="lazy" />
+                <img src="./public/image/brand1.jpg" alt="Calm Elegance" loading="lazy" />
               </div>
             </li>
             <li class="brand-card reveal motion-slide" style="--motion-delay: 0.1s">
@@ -261,7 +268,7 @@
                 </p>
               </div>
               <div class="brand-card__media">
-                <img src="/image/brand2.jpg" alt="Honest Quality" loading="lazy" />
+                <img src="./public/image/brand2.jpg" alt="Honest Quality" loading="lazy" />
               </div>
             </li>
             <li class="brand-card reveal motion-slide" style="--motion-delay: 0.2s">
@@ -272,7 +279,7 @@
                 </p>
               </div>
               <div class="brand-card__media">
-                <img src="/image/brand3.jpg" alt="Slow Experience" loading="lazy" />
+                <img src="./public/image/brand3.jpg" alt="Slow Experience" loading="lazy" />
               </div>
             </li>
           </ul>
@@ -426,7 +433,7 @@
         <div class="flow__cuts">
           <article class="flow-cut reveal motion-slide" data-cut="1" style="--motion-delay: 0s">
             <div class="flow-cut__visual parallax-layer dim-reveal" data-parallax="0.15">
-              <img src="/image/offer1.png" alt="키워드선택" loading="lazy" />
+              <img src="./public/image/offer1.png" alt="키워드선택" loading="lazy" />
             </div>
             <div class="flow-cut__body">
               <span class="flow-cut__step">01</span>
@@ -438,7 +445,7 @@
           </article>
           <article class="flow-cut reveal motion-slide" data-cut="2" style="--motion-delay: 0.1s">
             <div class="flow-cut__visual parallax-layer dim-reveal" data-parallax="0.15">
-              <img src="/image/offer2.png" alt="즉석제조" loading="lazy" />
+              <img src="./public/image/offer2.png" alt="즉석제조" loading="lazy" />
             </div>
             <div class="flow-cut__body">
               <span class="flow-cut__step">02</span>
@@ -450,7 +457,7 @@
           </article>
           <article class="flow-cut reveal motion-slide" data-cut="3" style="--motion-delay: 0.2s">
             <div class="flow-cut__visual parallax-layer dim-reveal" data-parallax="0.15">
-              <img src="/image/offer3.png" alt="완성" loading="lazy" />
+              <img src="./public/image/offer3.png" alt="완성" loading="lazy" />
             </div>
             <div class="flow-cut__body">
               <span class="flow-cut__step">03</span>
@@ -617,7 +624,7 @@
         <div class="footer__content">
           <a href="#hero" class="footer__logo" aria-label="첫 화면으로 이동">
             <img
-              src="/image/winebar-logo.png"
+              src="./public/image/winebar-logo.png"
               alt="Speakeasy Wine Bar"
               width="160"
               height="160"
@@ -666,7 +673,7 @@
       </div>
     </footer>
 
-    <script src="/reservation.js" defer></script>
-    <script type="module" src="/src/scripts/main.js"></script>
+    <script src="./public/reservation.js" defer></script>
+    <script type="module" src="./src/scripts/main.js"></script>
   </body>
 </html>
