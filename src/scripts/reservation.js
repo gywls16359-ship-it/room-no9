@@ -23,21 +23,19 @@ async function submitReservation(payload) {
 const MODAL_CLOSE_MS = 380;
 
 function initSuccessModal(modal, form, statusEl) {
-  document.body.prepend(modal);
-
   const confirmBtn = modal.querySelector('.success-modal__btn');
   const closeTargets = modal.querySelectorAll('[data-modal-close]');
   let savedScrollY = 0;
 
   const closeModal = () => {
-    modal.classList.remove('is-open');
+    modal.classList.remove('is-open', 'is-active');
     modal.setAttribute('aria-hidden', 'true');
+    modal.setAttribute('hidden', '');
     document.body.classList.remove('modal-open');
     document.body.style.top = '';
     window.scrollTo(0, savedScrollY);
 
     window.setTimeout(() => {
-      modal.hidden = true;
       const submitBtn = form.querySelector('button[type="submit"]');
       if (submitBtn) submitBtn.disabled = false;
       if (statusEl) {
@@ -73,14 +71,17 @@ function initSuccessModal(modal, form, statusEl) {
       }
 
       savedScrollY = window.scrollY;
-      modal.hidden = false;
+      modal.removeAttribute('hidden');
       modal.setAttribute('aria-hidden', 'false');
+      modal.classList.add('is-active');
       document.body.classList.add('modal-open');
       document.body.style.top = `-${savedScrollY}px`;
 
       requestAnimationFrame(() => {
-        modal.classList.add('is-open');
-        confirmBtn?.focus({ preventScroll: true });
+        requestAnimationFrame(() => {
+          modal.classList.add('is-open');
+          confirmBtn?.focus({ preventScroll: true });
+        });
       });
     },
     closeModal,
@@ -188,6 +189,7 @@ export function initReservation() {
         order_items,
       });
 
+      submitBtn.disabled = false;
       showReservationComplete(modalApi);
     } catch (err) {
       console.error(err);

@@ -1094,7 +1094,7 @@ body.modal-open {
   display: none !important;
 }
 
-.success-modal:not([hidden]) {
+.success-modal.is-active {
   display: grid !important;
 }
 
