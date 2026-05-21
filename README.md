@@ -39,9 +39,13 @@ npm run dev
 
 저장 컬럼: `name`, `contact`, `date`, `time`, `people`, `memo`, `order_categories`(배열), `order_items`(배열)
 
-## 배포 (Vercel)
+## 배포 (Vercel · 프로젝트 landingpage)
 
-**Settings → Environment Variables**에 `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`를 추가한 뒤 Redeploy 합니다.
+1. Vercel 프로젝트 **Root Directory**가 이 폴더(`랜딩페이지`)를 가리키는지 확인합니다. (저장소 루트가 이 프로젝트면 비워 두면 됩니다.)
+2. **Settings → Environment Variables** (Production)에 추가 후 Redeploy:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+3. 환경 변수가 없어도 `public/reservation.js` 기본값으로 동작합니다. (나중에 Supabase 프로젝트를 바꾸면 `.env`와 `reservation.js`의 기본값을 함께 수정하세요.)
 
 ```bash
 npm run build

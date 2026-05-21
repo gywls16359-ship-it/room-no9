@@ -2,19 +2,29 @@
  * 예약 폼 + 간편 주문 + Supabase 저장 + 완료 모달
  */
 (function () {
+  var DEFAULT_SUPABASE = {
+    url: 'https://temwlevjlyaivfltyeca.supabase.co',
+    anonKey:
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlbXdsZXZqbHlhaXZmbHR5ZWNhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNTA2MDIsImV4cCI6MjA5NDkyNjYwMn0.RIWdd6j9puuUmoplrWsN-8UWhkvpL1-45sNMEEovKCU',
+  };
+
   var SUPABASE_URL = '';
   var SUPABASE_ANON_KEY = '';
 
   function readSupabaseConfig() {
     var el = document.getElementById('supabase-config');
-    if (!el) return;
-    try {
-      var data = JSON.parse(el.textContent || '{}');
-      SUPABASE_URL = (data.url || '').trim();
-      SUPABASE_ANON_KEY = (data.anonKey || '').trim();
-    } catch (err) {
-      console.error('Supabase config parse error', err);
+    if (el) {
+      try {
+        var data = JSON.parse(el.textContent || '{}');
+        SUPABASE_URL = (data.url || '').trim();
+        SUPABASE_ANON_KEY = (data.anonKey || '').trim();
+      } catch (err) {
+        console.error('Supabase config parse error', err);
+      }
     }
+
+    if (!SUPABASE_URL) SUPABASE_URL = DEFAULT_SUPABASE.url;
+    if (!SUPABASE_ANON_KEY) SUPABASE_ANON_KEY = DEFAULT_SUPABASE.anonKey;
   }
 
   function init() {
