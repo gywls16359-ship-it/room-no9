@@ -1015,23 +1015,25 @@ a {
   outline-offset: 2px;
 }
 
+.is-hidden {
+  display: none !important;
+}
+
 .order-items {
-  display: none;
   margin-top: 0.25rem;
 }
 
 .order-items.is-visible {
-  display: block;
+  display: block !important;
 }
 
 .order-items__group {
-  display: none;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
 
 .order-items__group.is-visible {
-  display: flex;
+  display: flex !important;
 }
 
 .order-chip {
@@ -1116,7 +1118,7 @@ body.modal-open {
     visibility 0.38s var(--ease-out);
 }
 
-.success-modal[hidden] {
+.success-modal.is-hidden {
   display: none !important;
 }
 

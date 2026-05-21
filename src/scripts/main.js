@@ -1,5 +1,3 @@
-import { initReservation } from './reservation.js';
-
 const prefersReducedMotion = window.matchMedia(
   '(prefers-reduced-motion: reduce)'
 ).matches;
@@ -96,5 +94,4 @@ document.addEventListener('DOMContentLoaded', () => {
   initReveal();
   initParallax();
   initYear();
-  initReservation();
 });

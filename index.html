@@ -22,9 +22,8 @@
   </head>
   <body>
     <div
-      class="success-modal"
+      class="success-modal is-hidden"
       id="reservation-success-modal"
-      hidden
       aria-hidden="true"
     >
       <div class="success-modal__backdrop" data-modal-close aria-hidden="true"></div>
@@ -539,8 +538,8 @@
                     <span>푸드</span>
                   </label>
                 </div>
-                <div class="order-items" id="order-items" hidden>
-                  <div class="order-items__group" data-order-group="wine" hidden>
+                <div class="order-items is-hidden" id="order-items">
+                  <div class="order-items__group is-hidden" data-order-group="wine">
                     <label class="order-chip">
                       <input type="checkbox" name="order_items" value="레드 와인" />
                       <span>레드 와인</span>
@@ -558,7 +557,7 @@
                       <span>잔 단위 시음</span>
                     </label>
                   </div>
-                  <div class="order-items__group" data-order-group="signature" hidden>
+                  <div class="order-items__group is-hidden" data-order-group="signature">
                     <label class="order-chip">
                       <input type="checkbox" name="order_items" value="달콤한 무드" />
                       <span>달콤한 무드</span>
@@ -576,7 +575,7 @@
                       <span>맞춤 네이밍 칵테일</span>
                     </label>
                   </div>
-                  <div class="order-items__group" data-order-group="food" hidden>
+                  <div class="order-items__group is-hidden" data-order-group="food">
                     <label class="order-chip">
                       <input type="checkbox" name="order_items" value="치즈 플레이트" />
                       <span>치즈 플레이트</span>
@@ -667,6 +666,7 @@
       </div>
     </footer>
 
+    <script src="/reservation.js" defer></script>
     <script type="module" src="/src/scripts/main.js"></script>
   </body>
 </html>
