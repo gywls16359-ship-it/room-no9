@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Room No.9 — 뉴욕 스피크이지 무드의 퍼스널 칵테일 & 와인바"
+    />
+    <title>Room No.9 — Cocktail & Wine Bar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles/main.css" />
+  </head>
+  <body>
+    <div
+      class="success-modal"
+      id="reservation-success-modal"
+      hidden
+      aria-hidden="true"
+    >
+      <div class="success-modal__backdrop" data-modal-close aria-hidden="true"></div>
+      <div
+        class="success-modal__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="success-modal-title"
+      >
+        <span class="success-modal__icon" aria-hidden="true">✓</span>
+        <p class="success-modal__title" id="success-modal-title">
+          예약 신청이 완료되었습니다
+        </p>
+        <p class="success-modal__text">
+          접수해 주셔서 감사합니다.<br />
+          정성을 다해 준비해드리겠습니다.
+        </p>
+        <div class="success-modal__actions">
+          <button
+            type="button"
+            class="btn btn--primary success-modal__btn"
+            data-modal-close
+          >
+            확인
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="#hero" class="site-logo" aria-label="첫 화면으로 이동">
+          <img
+            src="/image/winebar-logo.png"
+            alt="Room No.9 Cocktail & Wine Bar"
+          />
+        </a>
+        <nav class="site-nav" aria-label="주요 메뉴">
+          <a href="#brand">Brand</a>
+          <a href="#about">About</a>
+          <a href="#flow">Service</a>
+          <a href="#menu">Menu</a>
+          <a href="#reservation" class="nav-cta">Reserve</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <!-- Hero: full-width -->
+      <section
+        class="section section--full hero hero--invite-pending"
+        id="hero"
+        aria-label="메인"
+      >
+        <div class="hero__bg parallax-layer" data-parallax="0.35" aria-hidden="true">
+          <img
+            src="/image/main1.png"
+            alt=""
+            width="1920"
+            height="1080"
+            loading="eager"
+          />
+        </div>
+        <div class="hero__overlay" aria-hidden="true"></div>
+        <div class="hero__content invitation-enter">
+          <p class="hero__eyebrow invitation-item" data-invite-order="1">
+            Cocktail & Wine Bar
+          </p>
+          <h1
+            class="hero__title invitation-item invitation-item--typewriter"
+            data-invite-order="2"
+          >
+            <span class="hero__typewriter" aria-hidden="true"></span>
+            <span class="visually-hidden"
+              >어서오세요. Room No.9으로 당신을 초대합니다.</span
+            >
+          </h1>
+          <p class="hero__subtitle invitation-item" data-invite-order="3">
+            어둠이 가장 고요한 순간, Room No.9 위로 얇은 빛이 스치듯 흐릅니다.<br />
+            여기는 기분으로 주문하고, 감정으로 마시는 공간.<br />
+            뉴욕의 speakeasy bar의 은밀함이 Room No.9에서 천천히 깨어납니다.
+          </p>
+          <a
+            href="#reservation"
+            class="btn btn--primary invitation-item"
+            data-invite-order="4"
+            >예약하기</a
+          >
+        </div>
+        <div class="scroll-hint invitation-item" data-invite-order="5" aria-hidden="true">
+          <span>Scroll</span>
+          <span class="scroll-hint__line"></span>
+        </div>
+      </section>
+      <script>
+        (function () {
+          var hero = document.getElementById('hero');
+          if (!hero) return;
+
+          var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          var content = hero.querySelector('.hero__content');
+          var bg = hero.querySelector('.hero__bg');
+          var typewriterEl = hero.querySelector('.hero__typewriter');
+          var titleEl = hero.querySelector('.hero__title');
+          var titleLines = ['어서오세요.', 'Room No.9으로', '당신을 초대합니다.'];
+          var FLICKER_MS = 1400;
+          var CHAR_MS = 72;
+
+          function finish() {
+            hero.classList.remove('hero--invite-pending');
+            hero.classList.add('hero--invite-done', 'hero--lights-ready');
+          }
+
+          function inviteEl(selector, delay) {
+            setTimeout(function () {
+              var el = hero.querySelector(selector);
+              if (el) el.classList.add('is-invited');
+            }, delay);
+          }
+
+          function showAll() {
+            hero.classList.add('hero--lights-ready');
+            if (bg) bg.classList.add('is-lit');
+            if (content) content.classList.add('is-invited');
+            if (typewriterEl) {
+              typewriterEl.innerHTML = '';
+              titleLines.forEach(function (line, i) {
+                if (i > 0) typewriterEl.appendChild(document.createElement('br'));
+                typewriterEl.appendChild(document.createTextNode(line));
+              });
+            }
+            if (titleEl) titleEl.classList.add('is-typed', 'is-invited', 'is-typing');
+            hero.querySelectorAll('[data-invite-order]').forEach(function (el) {
+              el.classList.add('is-invited');
+            });
+            finish();
+          }
+
+          function runTypewriter(done) {
+            if (!typewriterEl || !titleEl) {
+              done();
+              return;
+            }
+            typewriterEl.textContent = '';
+            titleEl.classList.add('is-typing');
+            var lineIndex = 0;
+            var charIndex = 0;
+
+            function tick() {
+              if (lineIndex >= titleLines.length) {
+                titleEl.classList.remove('is-typing');
+                titleEl.classList.add('is-typed', 'is-invited');
+                done();
+                return;
+              }
+              var line = titleLines[lineIndex];
+              if (charIndex === 0 && lineIndex > 0) {
+                typewriterEl.appendChild(document.createElement('br'));
+              }
+              if (charIndex < line.length) {
+                typewriterEl.appendChild(
+                  document.createTextNode(line.charAt(charIndex))
+                );
+                charIndex += 1;
+                setTimeout(tick, CHAR_MS);
+              } else {
+                lineIndex += 1;
+                charIndex = 0;
+                setTimeout(tick, CHAR_MS * 3);
+              }
+            }
+            tick();
+          }
+
+          if (reduced) {
+            showAll();
+            return;
+          }
+
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              hero.classList.add('hero--flicker');
+
+              setTimeout(function () {
+                hero.classList.add('hero--lights-ready');
+                if (bg) bg.classList.add('is-lit');
+              }, FLICKER_MS);
+
+              setTimeout(function () {
+                if (content) content.classList.add('is-invited');
+              }, FLICKER_MS + 250);
+
+              inviteEl('[data-invite-order="1"]', FLICKER_MS + 700);
+
+              setTimeout(function () {
+                runTypewriter(function () {
+                  inviteEl('[data-invite-order="3"]', 400);
+                  inviteEl('[data-invite-order="4"]', 1100);
+                  inviteEl('[data-invite-order="5"]', 1800);
+                  setTimeout(finish, 3200);
+                });
+              }, FLICKER_MS + 1100);
+            });
+          });
+        })();
+      </script>
+
+      <!-- Brand Philosophy -->
+      <section class="section section--grid brand" id="brand" aria-label="브랜드 철학">
+        <div class="grid">
+          <header class="section-header reveal motion-fade">
+            <h2 class="section-title">Brand Philosophy</h2>
+            <p class="section-desc section-desc--wide">
+              Room No.9은 도시의 복잡함 속에서 ‘머무르고 싶은 여유’를 제안하는 와인바입니다.
+              편안함·세련미·절제된 감성으로, 지친 하루 끝에 위로가 되는 한 잔을 준비합니다.
+            </p>
+          </header>
+          <ul class="brand__pillars">
+            <li class="brand-card reveal motion-slide" style="--motion-delay: 0s">
+              <div class="brand-card__body">
+                <h3 class="brand-card__title">Calm Elegance</h3>
+                <p class="brand-card__text">
+                  과하지 않은 디테일과 잔잔한 무드로 깊이를 더하는 경험
+                </p>
+              </div>
+              <div class="brand-card__media">
+                <img src="/image/brand1.jpg" alt="Calm Elegance" loading="lazy" />
+              </div>
+            </li>
+            <li class="brand-card reveal motion-slide" style="--motion-delay: 0.1s">
+              <div class="brand-card__body">
+                <h3 class="brand-card__title">Honest Quality</h3>
+                <p class="brand-card__text">
+                  와인·칵테일·푸드는 모두 ‘정직한 맛’을 기준으로 선별
+                </p>
+              </div>
+              <div class="brand-card__media">
+                <img src="/image/brand2.jpg" alt="Honest Quality" loading="lazy" />
+              </div>
+            </li>
+            <li class="brand-card reveal motion-slide" style="--motion-delay: 0.2s">
+              <div class="brand-card__body">
+                <h3 class="brand-card__title">Slow Experience</h3>
+                <p class="brand-card__text">
+                  빠른 소비 대신, 천천히 머무를 수 있는 고요한 공간
+                </p>
+              </div>
+              <div class="brand-card__media">
+                <img src="/image/brand3.jpg" alt="Slow Experience" loading="lazy" />
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Room No.9 Universe -->
+      <section class="section section--grid about" id="about" aria-label="Room No.9 세계관">
+        <div class="grid">
+          <header class="section-header reveal motion-fade">
+            <h2 class="section-title">Room No.9 Universe</h2>
+            <p class="section-desc section-desc--wide">
+              ‘도시 속 작은 은신처’—메뉴 네이밍, 그래픽, 조도, 음악, 공간 연출 전반에
+              이 세계관이 스며듭니다.
+            </p>
+          </header>
+          <ul class="about__story">
+            <li class="about-item about-reveal" data-about-index="0">
+              <div class="about-item__content">
+                <h3 class="about-item__title">도시의 9번째 방</h3>
+                <p>수많은 공간 중 가장 아늑하고 조용한 방</p>
+              </div>
+            </li>
+            <li class="about-item about-reveal" data-about-index="1">
+              <div class="about-item__content">
+                <h3 class="about-item__title">익명성과 친밀함의 공존</h3>
+                <p>손님 개개인의 이야기들이 조용히 축적되는 공간</p>
+              </div>
+            </li>
+            <li class="about-item about-reveal" data-about-index="2">
+              <div class="about-item__content">
+                <h3 class="about-item__title">밤의 리듬을 담는 장소</h3>
+                <p>빛, 음악, 조도, 색감이 모두 ‘밤의 감정’에 맞춰 설계</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <script>
+        (function () {
+          var section = document.getElementById('about');
+          if (!section) return;
+
+          var items = section.querySelectorAll('.about-reveal');
+          if (!items.length) return;
+
+          var STAGGER = 140;
+          var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+          section.classList.add('about-reveal-init');
+
+          function showItem(el, index) {
+            el.style.setProperty('--about-reveal-delay', index * STAGGER + 'ms');
+            el.classList.add('is-visible');
+          }
+
+          function hideItem(el) {
+            el.classList.remove('is-visible');
+            el.style.setProperty('--about-reveal-delay', '0ms');
+          }
+
+          function checkInitial() {
+            items.forEach(function (el, index) {
+              var rect = el.getBoundingClientRect();
+              if (rect.top < window.innerHeight * 0.9 && rect.bottom > 0) {
+                showItem(el, index);
+              }
+            });
+          }
+
+          if (reduced) {
+            items.forEach(showItem);
+            return;
+          }
+
+          var observer = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (entry) {
+                var el = entry.target;
+                var index = Number(el.getAttribute('data-about-index')) || 0;
+                if (entry.isIntersecting) {
+                  showItem(el, index);
+                } else {
+                  hideItem(el);
+                }
+              });
+            },
+            { threshold: 0.1, rootMargin: '0px 0px -5% 0px' }
+          );
+
+          items.forEach(function (el) {
+            observer.observe(el);
+          });
+
+          checkInitial();
+          window.addEventListener('load', checkInitial);
+        })();
+      </script>
+
+      <!-- Menu Concept -->
+      <section class="section section--grid menu" id="menu" aria-label="메뉴 구성">
+        <div class="grid">
+          <header class="section-header reveal motion-fade">
+            <h2 class="section-title">Menu</h2>
+            <p class="section-desc section-desc--wide">
+              와인, 시그니처 칵테일, 푸드 페어링—음료 경험을 방해하지 않는
+              미니멀한 구성으로 밤의 리듬을 완성합니다.
+            </p>
+          </header>
+          <div class="menu__grid">
+            <article class="menu-card reveal motion-slide" style="--motion-delay: 0s">
+              <span class="menu-card__tag">Wine</span>
+              <h3 class="menu-card__title">와인</h3>
+              <ul class="menu-card__list">
+                <li>경험 중심 큐레이션</li>
+                <li>부드럽고 깊은 레드·내추럴 와인</li>
+                <li>잔 단위 시음으로 접근성 강화</li>
+              </ul>
+            </article>
+            <article class="menu-card reveal motion-slide" style="--motion-delay: 0.1s">
+              <span class="menu-card__tag">Signature</span>
+              <h3 class="menu-card__title">시그니처 칵테일</h3>
+              <ul class="menu-card__list">
+                <li>고객 취향 기반 즉석 레시피 제작</li>
+                <li>향·텍스처·컬러의 시네마틱 무드</li>
+                <li>Room No.9 세계관 기반 스토리텔링 네이밍</li>
+              </ul>
+            </article>
+            <article class="menu-card reveal motion-slide" style="--motion-delay: 0.2s">
+              <span class="menu-card__tag">Food</span>
+              <h3 class="menu-card__title">푸드 페어링</h3>
+              <ul class="menu-card__list">
+                <li>가벼운 길티 플레저부터 담백한 조화까지</li>
+                <li>나눠 먹기 좋은 플레이트 구성</li>
+                <li>음료 경험을 돕는 미니멀 스타일</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Service Flow: full-width 3-cut -->
+      <section class="section section--full flow" id="flow" aria-label="서비스 흐름">
+        <div class="flow__intro grid reveal motion-fade">
+          <h2 class="section-title">Service Flow</h2>
+          <p class="section-desc">
+            맛·향·도수·기분·상황을 바탕으로 즉석 맞춤 제조합니다.<br />
+            인터뷰 없이, 빠르고 정확하게.
+          </p>
+        </div>
+        <div class="flow__cuts">
+          <article class="flow-cut reveal motion-slide" data-cut="1" style="--motion-delay: 0s">
+            <div class="flow-cut__visual parallax-layer dim-reveal" data-parallax="0.15">
+              <img src="/image/offer1.png" alt="키워드선택" loading="lazy" />
+            </div>
+            <div class="flow-cut__body">
+              <span class="flow-cut__step">01</span>
+              <h3 class="flow-cut__title">키워드 선택</h3>
+              <p class="flow-cut__text">
+                오늘의 기분과 상황을 담은 키워드를 고릅니다.
+              </p>
+            </div>
+          </article>
+          <article class="flow-cut reveal motion-slide" data-cut="2" style="--motion-delay: 0.1s">
+            <div class="flow-cut__visual parallax-layer dim-reveal" data-parallax="0.15">
+              <img src="/image/offer2.png" alt="즉석제조" loading="lazy" />
+            </div>
+            <div class="flow-cut__body">
+              <span class="flow-cut__step">02</span>
+              <h3 class="flow-cut__title">즉석 제조</h3>
+              <p class="flow-cut__text">
+                한 모금이 이야기처럼 흐르는 순간을 만듭니다.
+              </p>
+            </div>
+          </article>
+          <article class="flow-cut reveal motion-slide" data-cut="3" style="--motion-delay: 0.2s">
+            <div class="flow-cut__visual parallax-layer dim-reveal" data-parallax="0.15">
+              <img src="/image/offer3.png" alt="완성" loading="lazy" />
+            </div>
+            <div class="flow-cut__body">
+              <span class="flow-cut__step">03</span>
+              <h3 class="flow-cut__title flow-cut__title--italic">완성</h3>
+              <p class="flow-cut__text">
+                당신을 위한 한 잔이 완성됩니다.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Reservation: grid 1300px -->
+      <section class="section section--grid reservation" id="reservation" aria-label="예약">
+        <div class="grid reveal">
+          <div class="reservation__header">
+            <h2 class="section-title">Reservation</h2>
+            <p class="section-desc">조용한 한 자리를 예약해 주세요.</p>
+          </div>
+
+          <div class="reservation-panel" id="reservation-panel">
+            <form class="reservation-form" id="reservation-form" novalidate>
+              <div class="form-row">
+                <label for="name">이름</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  autocomplete="name"
+                  placeholder="홍길동"
+                />
+              </div>
+              <div class="form-row">
+                <label for="contact">연락처</label>
+                <input
+                  type="tel"
+                  id="contact"
+                  name="contact"
+                  required
+                  autocomplete="tel"
+                  placeholder="010-0000-0000"
+                />
+              </div>
+              <div class="form-row form-row--half">
+                <div>
+                  <label for="date">날짜</label>
+                  <input type="date" id="date" name="date" required />
+                </div>
+                <div>
+                  <label for="time">시간</label>
+                  <input type="time" id="time" name="time" required />
+                </div>
+              </div>
+              <div class="form-row">
+                <label for="people">인원 <span class="optional">(선택)</span></label>
+                <input
+                  type="number"
+                  id="people"
+                  name="people"
+                  min="1"
+                  max="6"
+                  value="1"
+                />
+              </div>
+
+              <fieldset class="form-row order-fieldset">
+                <legend class="order-fieldset__legend">
+                  간편 주문 <span class="optional">(선택)</span>
+                </legend>
+                <p class="order-fieldset__hint">
+                  미리 고르시면 방문 후 더 빠르게 맞춤 한 잔을 준비해 드립니다.
+                </p>
+                <div class="order-category" role="radiogroup" aria-label="주문 카테고리">
+                  <label class="order-category__btn">
+                    <input type="radio" name="order_category" value="wine" />
+                    <span>와인</span>
+                  </label>
+                  <label class="order-category__btn">
+                    <input type="radio" name="order_category" value="signature" />
+                    <span>시그니처</span>
+                  </label>
+                  <label class="order-category__btn">
+                    <input type="radio" name="order_category" value="food" />
+                    <span>푸드</span>
+                  </label>
+                </div>
+                <div class="order-items" id="order-items" hidden>
+                  <div class="order-items__group" data-order-group="wine" hidden>
+                    <label class="order-chip">
+                      <input type="checkbox" name="order_items" value="레드 와인" />
+                      <span>레드 와인</span>
+                    </label>
+                    <label class="order-chip">
+                      <input type="checkbox" name="order_items" value="내추럴 와인" />
+                      <span>내추럴 와인</span>
+                    </label>
+                    <label class="order-chip">
+                      <input type="checkbox" name="order_items" value="화이트 와인" />
+                      <span>화이트 와인</span>
+                    </label>
+                    <label class="order-chip">
+                      <input type="checkbox" name="order_items" value="잔 단위 시음" />
+                      <span>잔 단위 시음</span>
+                    </label>
+                  </div>
+                  <div class="order-items__group" data-order-group="signature" hidden>
+                    <label class="order-chip">
+                      <input type="checkbox" name="order_items" value="달콤한 무드" />
+                      <span>달콤한 무드</span>
+                    </label>
+                    <label class="order-chip">
+                      <input type="checkbox" name="order_items" value="상쾌한 무드" />
+                      <span>상쾌한 무드</span>
+                    </label>
+                    <label class="order-chip">
+                      <input type="checkbox" name="order_items" value="진한 무드" />
+                      <span>진한 무드</span>
+                    </label>
+                    <label class="order-chip">
+                      <input type="checkbox" name="order_items" value="맞춤 네이밍 칵테일" />
+                      <span>맞춤 네이밍 칵테일</span>
+                    </label>
+                  </div>
+                  <div class="order-items__group" data-order-group="food" hidden>
+                    <label class="order-chip">
+                      <input type="checkbox" name="order_items" value="치즈 플레이트" />
+                      <span>치즈 플레이트</span>
+                    </label>
+                    <label class="order-chip">
+                      <input type="checkbox" name="order_items" value="차콜 스낵" />
+                      <span>차콜 스낵</span>
+                    </label>
+                    <label class="order-chip">
+                      <input type="checkbox" name="order_items" value="디저트 페어링" />
+                      <span>디저트 페어링</span>
+                    </label>
+                  </div>
+                </div>
+              </fieldset>
+
+              <div class="form-row">
+                <label for="message">메모 <span class="optional">(선택)</span></label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows="3"
+                  placeholder="요청 사항이 있으면 적어주세요."
+                ></textarea>
+              </div>
+              <button type="submit" class="btn btn--primary btn--full">
+                예약 신청
+              </button>
+              <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+            </form>
+
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer__inner">
+        <div class="footer__content">
+          <a href="#hero" class="footer__logo" aria-label="첫 화면으로 이동">
+            <img
+              src="/image/winebar-logo.png"
+              alt="Speakeasy Wine Bar"
+              width="160"
+              height="160"
+              loading="lazy"
+            />
+          </a>
+          <div class="footer__groups">
+          <dl class="footer__group">
+            <div class="footer__row">
+              <dt>사업자명</dt>
+              <dd>스피크이지 주식회사</dd>
+            </div>
+            <div class="footer__row">
+              <dt>사업자등록번호</dt>
+              <dd>123-45-67890</dd>
+            </div>
+            <div class="footer__row">
+              <dt>업장 주소</dt>
+              <dd>서울특별시 강남구 테헤란로 123, B1</dd>
+            </div>
+          </dl>
+          <dl class="footer__group">
+            <div class="footer__row">
+              <dt>매장 전화</dt>
+              <dd>
+                <a href="tel:0212345678">02-1234-5678</a>
+              </dd>
+            </div>
+            <div class="footer__row">
+              <dt>Instagram</dt>
+              <dd>
+                <a
+                  href="https://instagram.com/speakeasy.bar"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >@speakeasy.bar</a
+                >
+              </dd>
+            </div>
+          </dl>
+          </div>
+        </div>
+        <p class="footer__copy">
+          &copy; <span id="year"></span> Room No.9. All rights reserved.
+        </p>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/scripts/main.js"></script>
+  </body>
+</html>
