@@ -153,7 +153,7 @@ export function initReservation() {
 
     if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
       statusEl.textContent =
-        'Supabase 설정이 없습니다. src/config.js 파일을 확인해 주세요.';
+        'Supabase 설정이 없습니다. .env 또는 Vercel 환경 변수를 확인해 주세요.';
       statusEl.classList.add('is-error');
       return;
     }
