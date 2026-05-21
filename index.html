@@ -41,8 +41,8 @@
           예약 신청이 완료되었습니다
         </p>
         <p class="success-modal__text">
-          접수해 주셔서 감사합니다.<br />
-          정성을 다해 준비해드리겠습니다.
+            예약해주셔서 감사합니다.<br />
+            방문할 날만을 기다리고 있겠습니다. 
         </p>
         <div class="success-modal__actions">
           <button
@@ -106,7 +106,7 @@
           </h1>
           <p class="hero__subtitle invitation-item" data-invite-order="3">
             어둠이 가장 고요한 순간, Room No.9 위로 얇은 빛이 스치듯 흐릅니다.<br />
-            여기는 기분으로 주문하고, 감정으로 마시는 공간.<br />
+            여기는 감정을 주문하고, 마시는 공간.<br />
             뉴욕의 speakeasy bar의 은밀함이 Room No.9에서 천천히 깨어납니다.
           </p>
           <a
@@ -439,7 +439,10 @@
               <span class="flow-cut__step">01</span>
               <h3 class="flow-cut__title">키워드 선택</h3>
               <p class="flow-cut__text">
-                오늘의 기분과 상황을 담은 키워드를 고릅니다.
+                오늘의 기분과 상황을 담은 키워드를 고릅니다. 달콤함, 상쾌함, 깊은
+                무드처럼 짧은 단어 몇 개만으로도 충분합니다. 긴 인터뷰 없이
+                바텐더가 당신의 취향을 빠르게 읽어, 이후 제조의 방향을
+                정합니다.
               </p>
             </div>
           </article>
@@ -451,7 +454,10 @@
               <span class="flow-cut__step">02</span>
               <h3 class="flow-cut__title">즉석 제조</h3>
               <p class="flow-cut__text">
-                한 모금이 이야기처럼 흐르는 순간을 만듭니다.
+                한 모금이 이야기처럼 흐르는 순간을 만듭니다. 선택한 키워드를
+                바탕으로 향·도수·텍스처를 맞추고, 바에서 즉석으로 블렌딩합니다.
+                과하지 않은 손맛으로 오늘 밤에 어울리는 한 잔을 완성해
+                드립니다.
               </p>
             </div>
           </article>
@@ -463,7 +469,10 @@
               <span class="flow-cut__step">03</span>
               <h3 class="flow-cut__title flow-cut__title--italic">완성</h3>
               <p class="flow-cut__text">
-                당신을 위한 한 잔이 완성됩니다.
+                당신을 위한 한 잔이 완성됩니다. 필요하다면 맞춤 네이밍과
+                페어링 제안까지 더해, 테이블 위에서 천천히 즐길 수 있도록
+                전달합니다. 첫 모금부터 마지막 한 방울까지, 오늘의 무드를
+                담은 경험으로 마무리합니다.
               </p>
             </div>
           </article>
@@ -475,7 +484,7 @@
         <div class="grid reveal">
           <div class="reservation__header">
             <h2 class="section-title">Reservation</h2>
-            <p class="section-desc">조용한 한 자리를 예약해 주세요.</p>
+            <p class="section-desc">예약하고자 하는 날짜와 시간,메뉴 등을 입력해주세요.</p>
           </div>
 
           <div class="reservation-panel" id="reservation-panel">
@@ -531,17 +540,17 @@
                 <p class="order-fieldset__hint">
                   미리 고르시면 방문 후 더 빠르게 맞춤 한 잔을 준비해 드립니다.
                 </p>
-                <div class="order-category" role="radiogroup" aria-label="주문 카테고리">
+                <div class="order-category" role="group" aria-label="주문 카테고리">
                   <label class="order-category__btn">
-                    <input type="radio" name="order_category" value="wine" />
+                    <input type="checkbox" name="order_category" value="wine" />
                     <span>와인</span>
                   </label>
                   <label class="order-category__btn">
-                    <input type="radio" name="order_category" value="signature" />
-                    <span>시그니처</span>
+                    <input type="checkbox" name="order_category" value="signature" />
+                    <span>칵테일</span>
                   </label>
                   <label class="order-category__btn">
-                    <input type="radio" name="order_category" value="food" />
+                    <input type="checkbox" name="order_category" value="food" />
                     <span>푸드</span>
                   </label>
                 </div>

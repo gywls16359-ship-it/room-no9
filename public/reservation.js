@@ -1,11 +1,7 @@
 /**
- * 예약 폼 + 간편 주문 + 완료 모달 (모듈 없이 동작)
+ * 예약 폼 + 간편 주문 + 완료 모달 (모듈 없이 동작, 서버 전송 없음)
  */
 (function () {
-  var SUPABASE_URL = 'https://uvrlchwzcdmfpwdllbpi.supabase.co';
-  var SUPABASE_ANON_KEY =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2cmxjaHd6Y2RtZnB3ZGxsYnBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzMzQzMDYsImV4cCI6MjA5NDkxMDMwNn0.Qy--uf_XduKU5aZdeeroclCUe3DCc35NiuDyrqz1_6E';
-
   function init() {
     var form = document.getElementById('reservation-form');
     var statusEl = document.getElementById('form-status');
@@ -33,9 +29,6 @@
       var contact = (form.querySelector('#contact')?.value || '').trim();
       var date = form.querySelector('#date')?.value || '';
       var time = form.querySelector('#time')?.value || '';
-      var people = parseInt(form.querySelector('#people')?.value || '1', 10);
-      var memo = (form.querySelector('#message')?.value || '').trim() || null;
-      var orderData = collectOrderData(form);
 
       if (!name || !contact || !date || !time) {
         if (statusEl) {
@@ -45,46 +38,7 @@
         return;
       }
 
-      var submitBtn = form.querySelector('button[type="submit"]');
-      if (submitBtn) submitBtn.disabled = true;
-
-      fetch(SUPABASE_URL + '/rest/v1/reservations', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          apikey: SUPABASE_ANON_KEY,
-          Authorization: 'Bearer ' + SUPABASE_ANON_KEY,
-          Prefer: 'return=minimal',
-        },
-        body: JSON.stringify({
-          name: name,
-          contact: contact,
-          date: date,
-          time: time,
-          people: isNaN(people) ? 1 : people,
-          memo: memo,
-          order_category: orderData.order_category,
-          order_items: orderData.order_items,
-        }),
-      })
-        .then(function (res) {
-          if (!res.ok) {
-            return res.text().then(function (t) {
-              throw new Error(t || 'HTTP ' + res.status);
-            });
-          }
-          if (submitBtn) submitBtn.disabled = false;
-          openSuccessModal(modal);
-        })
-        .catch(function (err) {
-          console.error(err);
-          if (submitBtn) submitBtn.disabled = false;
-          if (statusEl) {
-            statusEl.textContent =
-              '예약 전송에 실패했습니다. 잠시 후 다시 시도해 주세요.';
-            statusEl.classList.add('is-error');
-          }
-        });
+      openSuccessModal(modal);
     });
   }
 
@@ -101,46 +55,72 @@
 
   function initOrderItems(form) {
     var wrap = form.querySelector('#order-items');
-    var categoryWrap = form.querySelector('.order-category');
     var groups = form.querySelectorAll('[data-order-group]');
 
-    if (!wrap || !categoryWrap || !groups.length) return;
+    if (!wrap || !groups.length) return;
 
-    function showCategory(category) {
-      if (!category) {
-        setVisible(wrap, false);
-        groups.forEach(function (g) {
-          setVisible(g, false);
-          g.querySelectorAll('input[name="order_items"]').forEach(function (i) {
-            i.checked = false;
-          });
-        });
-        return;
-      }
-      setVisible(wrap, true);
-      groups.forEach(function (g) {
-        var on = g.getAttribute('data-order-group') === category;
-        setVisible(g, on);
-        if (!on) {
-          g.querySelectorAll('input[name="order_items"]').forEach(function (i) {
-            i.checked = false;
-          });
-        }
-      });
+    function categoryInput(category) {
+      return form.querySelector(
+        'input[name="order_category"][value="' + category + '"]'
+      );
     }
 
-    categoryWrap.addEventListener('click', function (e) {
-      var btn = e.target.closest('.order-category__btn');
-      if (!btn) return;
-      var radio = btn.querySelector('input[type="radio"]');
-      if (!radio) return;
-      radio.checked = true;
-      showCategory(radio.value);
+    function groupHasCheckedItems(group) {
+      return group.querySelectorAll('input[name="order_items"]:checked').length > 0;
+    }
+
+    function updateWrapVisibility() {
+      var anyVisible = false;
+      groups.forEach(function (g) {
+        if (g.classList.contains('is-visible')) anyVisible = true;
+      });
+      setVisible(wrap, anyVisible);
+    }
+
+    function hideOrderGroup(group) {
+      var category = group.getAttribute('data-order-group');
+      var catInput = categoryInput(category);
+
+      setVisible(group, false);
+      group.querySelectorAll('input[name="order_items"]').forEach(function (i) {
+        i.checked = false;
+      });
+      if (catInput) catInput.checked = false;
+      updateWrapVisibility();
+    }
+
+    function showOrderGroup(group) {
+      var category = group.getAttribute('data-order-group');
+      var catInput = categoryInput(category);
+
+      setVisible(wrap, true);
+      setVisible(group, true);
+      wrap.appendChild(group);
+      if (catInput) catInput.checked = true;
+    }
+
+    form.querySelectorAll('input[name="order_category"]').forEach(function (input) {
+      input.addEventListener('change', function () {
+        var group = form.querySelector(
+          '[data-order-group="' + input.value + '"]'
+        );
+        if (!group) return;
+
+        if (input.checked) {
+          showOrderGroup(group);
+        } else {
+          hideOrderGroup(group);
+        }
+      });
     });
 
-    form.querySelectorAll('input[name="order_category"]').forEach(function (radio) {
-      radio.addEventListener('change', function () {
-        if (radio.checked) showCategory(radio.value);
+    groups.forEach(function (group) {
+      group.addEventListener('change', function (e) {
+        if (e.target.name !== 'order_items') return;
+        if (!group.classList.contains('is-visible')) return;
+        if (!groupHasCheckedItems(group)) {
+          hideOrderGroup(group);
+        }
       });
     });
   }
