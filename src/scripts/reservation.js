@@ -47,9 +47,15 @@ function initSuccessModal(modal, form, statusEl) {
         el.checked = false;
       });
       const orderItemsWrap = form.querySelector('#order-items');
-      if (orderItemsWrap) orderItemsWrap.hidden = true;
+      if (orderItemsWrap) {
+        orderItemsWrap.classList.remove('is-visible');
+        orderItemsWrap.setAttribute('hidden', '');
+      }
       form.querySelectorAll('[data-order-group]').forEach((group) => {
-        group.hidden = true;
+        setOrderGroupVisible(group, false);
+      });
+      form.querySelectorAll('input[name="order_category"]').forEach((input) => {
+        input.checked = false;
       });
     }, MODAL_CLOSE_MS);
   };
@@ -92,27 +98,56 @@ function showReservationComplete(modalApi) {
   modalApi.openModal();
 }
 
+function setOrderGroupVisible(group, visible) {
+  if (visible) {
+    group.classList.add('is-visible');
+    group.removeAttribute('hidden');
+  } else {
+    group.classList.remove('is-visible');
+    group.setAttribute('hidden', '');
+    group.querySelectorAll('input[name="order_items"]').forEach((input) => {
+      input.checked = false;
+    });
+  }
+}
+
 function initOrderItems(form) {
   const orderItemsWrap = form.querySelector('#order-items');
+  const categoryWrap = form.querySelector('.order-category');
   const groups = form.querySelectorAll('[data-order-group]');
-  const categoryInputs = form.querySelectorAll('input[name="order_category"]');
 
-  if (!orderItemsWrap || !groups.length) return;
+  if (!orderItemsWrap || !categoryWrap || !groups.length) return;
 
   const showGroup = (category) => {
+    if (!category) {
+      orderItemsWrap.classList.remove('is-visible');
+      orderItemsWrap.setAttribute('hidden', '');
+      groups.forEach((group) => setOrderGroupVisible(group, false));
+      return;
+    }
+
+    orderItemsWrap.classList.add('is-visible');
+    orderItemsWrap.removeAttribute('hidden');
+
     groups.forEach((group) => {
-      const isActive = group.dataset.orderGroup === category;
-      group.hidden = !isActive;
-      if (!isActive) {
-        group.querySelectorAll('input[name="order_items"]').forEach((input) => {
-          input.checked = false;
-        });
-      }
+      setOrderGroupVisible(group, group.dataset.orderGroup === category);
     });
-    orderItemsWrap.hidden = !category;
   };
 
-  categoryInputs.forEach((input) => {
+  const onCategoryPick = (input) => {
+    if (!input?.value) return;
+    input.checked = true;
+    showGroup(input.value);
+  };
+
+  categoryWrap.addEventListener('click', (e) => {
+    const btn = e.target.closest('.order-category__btn');
+    if (!btn) return;
+    const input = btn.querySelector('input[type="radio"]');
+    onCategoryPick(input);
+  });
+
+  form.querySelectorAll('input[name="order_category"]').forEach((input) => {
     input.addEventListener('change', () => {
       if (input.checked) showGroup(input.value);
     });
@@ -137,9 +172,9 @@ export function initReservation() {
   const statusEl = document.getElementById('form-status');
   const modal = document.getElementById('reservation-success-modal');
 
-  if (!form || !modal) return;
+  if (!form) return;
 
-  const modalApi = initSuccessModal(modal, form, statusEl);
+  const modalApi = modal ? initSuccessModal(modal, form, statusEl) : null;
 
   initOrderItems(form);
 
@@ -190,7 +225,12 @@ export function initReservation() {
       });
 
       submitBtn.disabled = false;
-      showReservationComplete(modalApi);
+      if (modalApi) {
+        showReservationComplete(modalApi);
+      } else {
+        statusEl.textContent = '예약 신청이 완료되었습니다.';
+        statusEl.classList.add('is-success');
+      }
     } catch (err) {
       console.error(err);
       statusEl.textContent =

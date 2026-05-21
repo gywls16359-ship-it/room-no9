@@ -980,8 +980,14 @@ a {
 
 .order-category__btn input {
   position: absolute;
-  opacity: 0;
-  pointer-events: none;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .order-category__btn span {
@@ -1009,20 +1015,40 @@ a {
   outline-offset: 2px;
 }
 
+.order-items {
+  display: none;
+  margin-top: 0.25rem;
+}
+
+.order-items.is-visible {
+  display: block;
+}
+
 .order-items__group {
-  display: flex;
+  display: none;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
 
+.order-items__group.is-visible {
+  display: flex;
+}
+
 .order-chip {
   cursor: pointer;
+  position: relative;
 }
 
 .order-chip input {
   position: absolute;
-  opacity: 0;
-  pointer-events: none;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .order-chip span {
